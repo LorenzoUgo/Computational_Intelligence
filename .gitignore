@@ -1,3 +1,4 @@
 .\Laboratory\*.pptx
 *.pdf
 .idea
+venv
