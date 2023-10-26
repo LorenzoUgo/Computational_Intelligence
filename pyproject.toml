@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "coding"
+version = "0.1.0"
+description = ""
+authors = ["Lorenzo Ugoccioni <s315734@studenti.polito.it>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+tqdm = "^4.66.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
