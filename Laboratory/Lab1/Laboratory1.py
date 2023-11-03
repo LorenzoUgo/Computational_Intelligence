@@ -3,14 +3,16 @@ from math import ceil
 from functools import reduce
 from collections import namedtuple, deque
 from queue import PriorityQueue
+
+import numpy
 import numpy as np
 from tqdm.auto import tqdm
 
 State = namedtuple('State', ['taken', 'not_taken'])
 
 PROBLEM_SIZE = 50
-NUM_SETS = 100
-SETS = tuple(np.array([random() < .2 for _ in range(PROBLEM_SIZE)])for _ in range(NUM_SETS))
+NUM_SETS = 1000
+SETS = tuple(np.array([random() < .3 for _ in range(PROBLEM_SIZE)])for _ in range(NUM_SETS))
 
 
 def goal_check(state):
@@ -23,8 +25,8 @@ def covered(state):
 
 def f(state):
     g = g_func(state)
-    h = h_func(state)
-    return g + h
+    h = h2_funct(state)
+    return len(state.taken) + h
 
 
 def g_func(state):
@@ -37,6 +39,23 @@ def h_func(state):
     sette = [np.logical_or(punti_presi, SETS[s]) for s in state.not_taken]
     free_tessere = min(PROBLEM_SIZE - sum(s) for s in sette)
     return free_tessere
+
+
+def h2_funct(state):
+    punti_presi = covered(state)
+    taken = 0
+
+    while PROBLEM_SIZE - sum(punti_presi) > 0:
+        min_val = numpy.Inf
+        for s in state.not_taken:
+            val = PROBLEM_SIZE - sum(np.logical_or(punti_presi, SETS[s]))
+            if val < min_val:
+                min_val = PROBLEM_SIZE - sum(np.logical_or(punti_presi, SETS[s]))
+                s_min = s
+        punti_presi = np.logical_or(punti_presi, SETS[s_min])
+        taken += 1
+
+    return taken
 
 
 if __name__ == "__main__":
