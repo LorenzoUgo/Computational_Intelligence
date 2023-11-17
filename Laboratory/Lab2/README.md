@@ -36,7 +36,15 @@ In the conclusion part, we are taking into consideration only the (mu+lambda) st
 Users can also tune our different strategies by adjusting population size (mu), offspring size (lamba), number of generations, mutation step (sigma) and number of row of the game.
 
 ## Conclusion 
-The agent with genotype [array([0.18803874, 0.00107022, 0.30744504, 0.22689314, 0.27655286]), array([[1, 0, 0, 0, 0, 0, 0 , 0 , 0], [0.49449902, 0.07129597, 0.434205, 0, 0, 0, 0, 0, 0], [0.21588782, 0.08533459, 0.22839292, 0.24575892, 0.22462575, 0, 0, 0, 0], [0.2994488 , 0.01903277, 0.03081408, 0.06029454, 0.14796918, 0.10195538, 0.34048525, 0, 0], [0.13967284, 0.01803565, 0.05424776, 0.26605806, 0.11705187, 0.14457249, 0.22826424, 0.00846627, 0.02363082]])] has a winning rate on avarage of 32% against the optimal algorithm.
+The agent with genotype:
+gene_1 = [0.18803874, 0.00107022, 0.30744504, 0.22689314, 0.27655286]
+gene_2 = [ [1         , 0         , 0         , 0         , 0         , 0         , 0         , 0         , 0         ],
+           [0.49449902, 0.07129597, 0.434205  , 0         , 0         , 0         , 0         , 0         , 0         ],
+           [0.21588782, 0.08533459, 0.22839292, 0.24575892, 0.22462575, 0         , 0         , 0         , 0         ],
+           [0.2994488 , 0.01903277, 0.03081408, 0.06029454, 0.14796918, 0.10195538, 0.34048525, 0         , 0         ],
+           [0.13967284, 0.01803565, 0.05424776, 0.26605806, 0.11705187, 0.14457249, 0.22826424, 0.00846627, 0.02363082]]
+  
+has a winning rate on avarage of 32% against the optimal algorithm.
 
 
 ## Contributing
