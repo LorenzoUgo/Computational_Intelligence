@@ -1,104 +1,29 @@
-Soluzione V0
-    --> PARAMETRI GLOBALI:
-            NUM_GENERATIONS = 50 - POPULATION_SIZE = 10 - NEW_OFFSPRING = 30 - TOURNAMENT_SIZE = 5 - NUM_ISLANDS = 3 - NUM_LOCI = 1000 - MUTATION_PROBABILITY = .15
-    --> Generazione di individui fino a trovare l'individuo migliore (secondo <FITNESS>=1). No limiti sulle generazioni sviluppate
-    --> Scelta probabilistica tra Mutazione (85%) e Ricombinazione(15%).
-    --> Selezione del genitore con Roulette. Mutazione di 1 locus.
-    --> Selezione dei genitori con tornei di dimensioni variabili e partecipanti random. Ricombinazione con crossover multiplo (casuale)
-    --> Inizio la generazione generando 2 figli dagli individui più diversi (secondo <FITNESS>) che ho in popolazione
-    --> Rimozione degli elementi con stesso <Genotipo>
-    --> Classica selezione dei più forti. Scelta sia tra vecchia generazione, sia nuova generazione
+# LAB 09
+## Problem description
+The problem consisted in writing a local-search algorithm (eg. an EA) able to solve the *Problem* instances 1, 2, 5, and 10 on a 1000-loci genomes, using a minimum number of fitness calls.
+In order to do so, we had to obtain an individual in our population with fitness = 1
 
-Risultati:
-    1)  Problema: 1 
-        numero di chiamate alla FITNESS: 89130
-        numero di generazioni necessarie: 2786
-        tempo impiegato: 33 min
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
+## Our approach
+We started thinking about how we could mantain some diversity among our population. 
+We decided to implement an algorithm following the island idea.
 
-Soluzione V1
-    --> PARAMETRI GLOBALI:
-            ERA = 5 - NUM_GENERATIONS = 50 - POPULATION_SIZE = 10 - NEW_OFFSPRING = 30 - TOURNAMENT_SIZE = 5 - NUM_ISLANDS = 4 - NUM_LOCI = 1000 - MUTATION_PROBABILITY = .15
-    --> 5 ERE di evoluzione delle isole di Recombination e Mutation + solo Mutation per l'isola Solitude
-    --> 4 isole:
-        - 1 Mutation: scelta della tecnica di mutation casuale. Esegue 50 generazioni.
-        - 1 Recombination: scelta delle tecniche casuale ma bilanciata con pesi [0.5, 0,3, 0,1]. Esegue 50 generazioni.
-        - 1 Champ: Solo recombination di tipo uniform_crossover. Genitore scelto con la roulette.
-                   Pertita della popolazione orignale. Sull'isola restano solo i nuovi individui.
-                   Dopo 50 generazioni, ciascunua isola mette qui il suo best individuo (secondo <FITNESS>). Esegue 1 generazione dopo le ERE delle isole M e R.
-                   Mette il suo best individuo nell'isola S.
-        - 1 Solitude: Strategie di Mutation e Recombination scelte in modo casuale. Genitore scelto con la roulette.
-                      Alla fine sopravviverà solo l'individuo migliore (secondo <FITNESS>):
-                        muta , ad ogni ERA, finchè è da solo;
-                        ricombina quando, alla fine di tutte le ERE, qui viene aggiunto il best dall'isola CHAMP.
+In order to do so, we generated xxx different population of xxx individuals each and made them evolve (recombination using the crossover function and mutation) separately, exploiting *migration* every xxx "separated" generations.
+After each era (= num of generations on separate islands), we selected the 2 best individuals of each island and put them in another island, randomly. After this operation, the separate evolution would take again place and so on.
 
-Risultati:
-    1)  Problema: 1 
-        numero di chiamate alla FITNESS: 120308
-        numero di generazioni necessarie: 2000
-        tempo impiegato: -- min
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
-    
-    2)  Problema: 1 
-        numero di chiamate alla FITNESS: 120308
-        numero di generazioni necessarie: 2000
-        tempo impiegato: 44.1 sec
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
+## Initialization
+We decided to initialize the population randomly and distributing the individuals on the different islands.
 
 
-
-Soluzione V2
-    --> PARAMETRI GLOBALI:
-            NUM_GENERATIONS = 20 - POPULATION_SIZE = 10 - NEW_OFFSPRING = 30 - TOURNAMENT_SIZE = 5 - NUM_ISLANDS = 3 - NUM_LOCI = 1000 - MUTATION_PROBABILITY = .15
-    --> 20 Generazioni di evoluzione delle isole di Recombination e Mutation + solo Mutation per l'isola Solitude
-    --> 4 isole:
-        - 1 Mutation: scelta della tecnica di mutation casuale. Esegue 1 generazioni.
-        - 1 Recombination: scelta delle tecniche casuale ma bilanciata con pesi [0.5, 0,3, 0,1]. Esegue 1 generazioni.
-        - 1 Champ: Solo recombination di tipo uniform_crossover. Genitore scelto con la roulette.
-                   Pertita della popolazione orignale. Sull'isola restano solo i nuovi individui.
-                   Dopo ciascuna generazione, ciascuna isola mette qui il suo best individuo (secondo <FITNESS>). Esegue 1 generazione dopo le 20 generazioni delle isole M e R.
-                   Mette il suo best individuo nell'isola S.
-        - 1 Solitude: Strategie di Mutation e Recombination scelte in modo casuale. Genitore scelto con la roulette.
-                      Alla fine sopravviverà solo l'individuo migliore (secondo <FITNESS>):
-                        muta, ad ogni generazione, finchè è da solo;
-                        ricombina quando, alla fine di tutte le generazioni, qui viene aggiunto il best dall'isola CHAMP.
-    
-    --> Ciclo continuo fino a raggiungimento della fitness obiettivo
-
-Risultati:
-    1)  Problema: 1 
-        numero di chiamate alla FITNESS: 111359
-        numero di generazioni necessarie: 1869
-        tempo impiegato: 37.7 sec
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
-
-    2)  Problema: 1
-        numero di chiamate alla FITNESS: 116363 
-        numero di generazioni necessarie: 1953
-        tempo impiegato: 45.5 sec
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
+## Our results
+Unfortunately, we didn't manage to achieve good results. We tried different combinations of NUM_ERAS, NUM_GENERATIONS_PER_ERA and population dimensions but our results were still saturate to a non-optimal fitness value.
+We thought the islands approach was a good idea but, looking at our results, we probably got something working not properly.
 
 
-Soluzione V4
-    --> PARAMETRI GLOBALI:
-            NUM_GENERATIONS = 50 - POPULATION_SIZE = 10 - NEW_OFFSPRING = 30 - TOURNAMENT_SIZE = 5 - NUM_ISLANDS = 3 - NUM_LOCI = 1000 - MUTATION_PROBABILITY = .15
-    --> Generazione di individui fino a trovare l'individuo migliore (secondo <FITNESS>=1). No limiti sulle generazioni sviluppate
-    --> Scelta probabilistica tra Mutazione (85%) e Ricombinazione(15%).
-    --> Selezione del genitore casuale. Scelta della tecnica di mutation casuale.
-    --> Selezione del genitore casuale. Scelta della tecnica di Ricombinazione casuale
-    --> Inizio la generazione generando 2 figli dagli individui più diversi (secondo <FITNESS>) che ho in popolazione
-    --> Rimozione degli elementi con stesso <Genotipo>
-    --> Classica selezione dei più forti. Scelta sia tra vecchia generazione, sia nuova generazione
+Problem(1) -> fitness(best individual) = 1.0 with 65950 fitness function calls
+Problem(2) -> fitness(best individual) = 0.884 with 150100 fitness function calls (stopped because reached 200 eras)
+Problem(5) -> fitness(best individual) = 0.436 with 150100 fitness function calls (stopped because reached 200 eras) (stalled from 39º era)
+Problem(10) -> fitness(best individual) = 0.33 with 150100 fitness function calls (stopped because reached 200 eras) (stalled from 69° era)
 
-Risultati:
-    1)  Problema: 1 
-        numero di chiamate alla FITNESS: 89130
-        numero di generazioni necessarie: 2786
-        tempo impiegato: 33 min
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
 
-    2)  Problema: 1 
-        numero di chiamate alla FITNESS: 92330
-        numero di generazioni necessarie: 2885
-        tempo impiegato: 29 min 10 sec
-        individuo: [1, 1, ..., 1, 1] fitness=1.0
+## Contributing
+Made with the contribution of Gregorio Nicora s310820

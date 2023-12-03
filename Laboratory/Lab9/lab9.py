@@ -5,20 +5,20 @@ import numpy as np
 
 # GLOBAL PARAMETER #
 NUM_LOCI = 1000
-POPULATION_SIZE = 15
-NEW_OFFSPRING = 10
-TOURNAMENT_SIZE = 2
+POPULATION_SIZE = 10
+NEW_OFFSPRING = 15
+TOURNAMENT_SIZE = 5
 NUM_ISLANDS = 10
 NUM_GENERATIONS = 5
-NUM_ERA = 100
+NUM_ERA = 200
 
-MUTATION_PROBABILITY = .25
+MUTATION_PROBABILITY = .35
 NUM_MUTATION = 10
 
 # . . . # Problem Definition + first individual # . . . #
 
-fitness = lab9_lib.make_problem(2)
-# starting_population = [choices([0, 1], k=NUM_LOCI) for _ in range(1000)]
+fitness = lab9_lib.make_problem(5)
+starting_population = [choices([0, 1], k=NUM_LOCI) for _ in range(1000)]
 
 
 def inizialization():
@@ -63,6 +63,7 @@ def mutation_n_random(ind):  # 2 loci(gene) mutated
     assert len(offspring) == NUM_LOCI
     return offspring
 
+
 def mutation_n(ind):  # Reset randomly a random number of loci
     poss = (randint(0, NUM_LOCI - 1), randint(0, NUM_LOCI - 1))
     offspring = ind[:min(poss)] + [choice([0, 1]) for _ in range(max(poss) - min(poss))] + ind[max(poss):]
@@ -103,6 +104,12 @@ def uniform_crossover(ind1, ind2):
     return offspring
 
 
+def crossover(ind1, ind2):
+    offspring = [ind1[i] if random() < .5 else ind2[i] for i in range(NUM_LOCI)]
+    assert len(offspring) == NUM_LOCI
+    return offspring
+
+
 def uniform_crossover_double(ind1, ind2):
     o1, o2 = (
     [ind1[i] if i % 2 else ind2[i] for i in range(NUM_LOCI)], [ind2[i] if i % 2 else ind1[i] for i in range(NUM_LOCI)])
@@ -125,7 +132,6 @@ def static_tournament(population):
     champ = max(pool, key=lambda ind: ind[1])
     return champ[0]
 
-
 def best_parent_ever(population):
     champ = max(population, key=lambda ind: ind[1])
     return champ[0]
@@ -142,12 +148,12 @@ def genotype_distance(population):  # Select the 2 element with most different g
 
 # TO BE DEFINED...
 def distance_ind(population):  # Select the 2 element with most different genotype
-    distance = np.array(
-        [[sum(np.bitwise_xor(np.array(population[i][0]), np.array(population[j][0]))) for j in range(len(population))]
+    distance = np.array([[sum(np.bitwise_xor(np.array(population[i][0]), np.array(population[j][0]))) for j in range(len(population))]
          for i in range(len(population))])
-    max_position = np.unravel_index(np.argmax(distance, axis=None), distance.shape)
+    avg_distance_ind = sorted([(np.sum(ind)/(len(ind) - 1), i) for i, ind in enumerate(distance)], reverse=True)
 
-    return population[max_position[0]][0], population[max_position[1]][0]
+    copy_population = [population[avg_distance_ind[ind][1]] for ind in range(len(population))]    # ORDERING FROM BEST TO WORSE
+    return copy_population[:POPULATION_SIZE]  # SURVIVAL SELECTION
 
 
 def survival_selection(population):
@@ -188,6 +194,7 @@ def island(population):  #
 
     population.extend(offspring)
     population = remove_twin(population)
+    # population = distance_ind(population)
     population = survival_selection(population)
 
     return population
@@ -219,9 +226,9 @@ def check_early_end(ind):
 
 
 if __name__ == "__main__":
-    galapagos_population = inizialization()
-    galapagos_population = distribute_individuals(galapagos_population)
-    # galapagos_population = [choices(starting_population, k=POPULATION_SIZE) for _ in range(NUM_ISLANDS)]  # N island
+    # galapagos_population = inizialization()
+    # galapagos_population = distribute_individuals(galapagos_population)
+    galapagos_population = [choices(starting_population, k=POPULATION_SIZE) for _ in range(NUM_ISLANDS)]  # N island
     galapagos_population = [[(ind, fitness(ind)) for ind in population] for population in galapagos_population]
 
     best_ind = []
@@ -232,7 +239,7 @@ if __name__ == "__main__":
             if check_early_end(best_ind[0]):
                 break
 
-        for g in range((era+1)*3):
+        for g in range(NUM_GENERATIONS):
             # print("New generation !")
             i = 0
             if len(best_ind) != 0:
@@ -252,6 +259,6 @@ if __name__ == "__main__":
             best_ind.sort(key=lambda ind: ind[1], reverse=True)
 
         galapagos_population = migration(galapagos_population)
-        print(era, best_ind[0][1], best_ind[0][0])
+        print(era, best_ind[0][1])
 
     print(fitness.calls, "\n", best_ind[0][1])
