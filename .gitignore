@@ -2,3 +2,9 @@
 *.pdf
 .idea
 venv
+*.pyc
+
+lab9_V0.ipynb
+lab9_V4.ipynb
+lab9_V1.ipynb
+initial_lab9_gregorio.ipynb
