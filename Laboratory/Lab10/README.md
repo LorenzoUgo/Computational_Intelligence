@@ -20,13 +20,13 @@ We decided, in order to have some exploration also at test time, to have a certa
 probability to make a random move instead of picking the highest rated in the dictionary 
 built at training time. This is done by using the EXP_RATE variable.
 
-It can be seen from the graph in the notebook that we're able to get 74% wins on average.
+It can be seen from the graph in the notebook that we're able to get 78,5% wins on average.
 
 ## Our results
 
 We can see that, at the end, we can get decent results when playing against random player.
 
-![Alt text](./results.jpg?raw=true "Title")
+![Alt text](./output.png?raw=true "Title")
 
 ## Contributing
 Made with the contribution of Gregorio Nicora s310820
