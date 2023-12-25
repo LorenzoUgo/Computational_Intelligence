@@ -29,4 +29,4 @@ We can see that, at the end, we can get decent results when playing against rand
 ![Alt text](./results.jpg?raw=true "Title")
 
 ## Contributing
-Made with the contribution of Lorenzo Ugoccioni s315734
+Made with the contribution of Gregorio Nicora s310820
