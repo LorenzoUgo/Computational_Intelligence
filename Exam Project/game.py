@@ -92,8 +92,6 @@ class Game(object):
             self.current_player_idx += 1
             self.current_player_idx %= len(players)
             ok = False
-            #self.print()
-            #print("- - - - - Player "+ str(self.current_player_idx) +" turn - - - - -")
             while not ok:
                 from_pos, slide = players[self.current_player_idx].make_move(
                     self)
